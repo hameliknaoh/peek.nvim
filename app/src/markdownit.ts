@@ -16,18 +16,21 @@ const md = new MarkdownIt('default', {
   typographer: true,
   linkify: true,
   langPrefix: 'language-',
-  highlight: __args['syntax'] && ((code, language) => {
-    if (language && highlight.getLanguage(language)) {
-      try {
-        return highlight.highlight(code, { language }).value;
-      } catch {
-        return code;
+  highlight:
+    __args['syntax'] &&
+    ((code, language) => {
+      if (language && highlight.getLanguage(language)) {
+        try {
+          return highlight.highlight(code, { language }).value;
+        } catch {
+          return code;
+        }
       }
-    }
 
-    return '';
-  }),
-}).use(MarkdownItEmoji)
+      return '';
+    }),
+})
+  .use(MarkdownItEmoji)
   .use(MarkdownItFootnote)
   .use(MarkdownItTaskLists, { enabled: false, label: true })
   .use(MarkdownItTexmath, {
@@ -100,7 +103,7 @@ md.renderer.rules.fence = (() => {
   const fence = md.renderer.rules.fence!;
   const escapeHtml = md.utils.escapeHtml;
   const regex = new RegExp(
-    /^(?<frontmatter>---[\s\S]+---)?\s*(?<content>(?<charttype>flowchart|sequenceDiagram|gantt|classDiagram|stateDiagram|pie|journey|C4Context|erDiagram|requirementDiagram|gitGraph)[\s\S]+)/,
+    /^(?<frontmatter>---[\s\S]+---)?\s*(?<content>(?<charttype>flowchart|sequenceDiagram|gantt|classDiagram|stateDiagram|pie|journey|C4Context|erDiagram|requirementDiagram|graph|gitGraph)[\s\S]+)/,
   );
 
   return (tokens, idx, options, env, self) => {
