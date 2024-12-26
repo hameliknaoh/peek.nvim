@@ -18,7 +18,9 @@ function init() {
 async function render(id: string, definition: string, container: Element) {
   try {
     return (await mermaid.render(id, definition, container)).svg;
-  } catch { /**/ }
+  } catch {
+    /**/
+  }
 }
 
 export default { init, render };
