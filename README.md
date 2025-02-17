@@ -1,6 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [peek.nvim](#peeknvim)
+    - [:sparkles: Features](#sparkles-features)
+    - [:battery: Requirements](#battery-requirements)
+    - [:electric_plug: Installation](#electric_plug-installation)
+        - [lazy.nvim](#lazynvim)
+    - [:wrench: Configuration](#wrench-configuration)
+    - [:paperclip: `app` option](#paperclip-app-option)
+    - [:bulb: Usage](#bulb-usage)
+    - [:mag: Preview window](#mag-preview-window)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # peek.nvim
 
-*Markdown preview plugin for [Neovim](https://github.com/neovim/neovim)*
+_Markdown preview plugin for [Neovim](https://github.com/neovim/neovim)_
 
 ![preview](media/peek.jpg)
 
@@ -22,14 +37,28 @@
 
 ```lua
 {
-    "toppair/peek.nvim",
-    event = { "VeryLazy" },
+    "hameliknaoh/peek.nvim",
     build = "deno task --quiet build:fast",
-    config = function()
-        require("peek").setup()
-        vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-        vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-    end,
+    keys = {
+        {
+            "<leader>cp",
+            function()
+                local peek = require("peek")
+                if peek.is_open() then
+                    peek.close()
+                else
+                    peek.open()
+                end
+            end,
+            desc = "Peek (Markdown Preview)",
+        },
+    },
+    opts = { theme = "dark", app = "browser" },
+    dependencies = {
+        "williamboman/mason.nvim",
+        optional = true,
+        opts = { ensure_installed = { "deno" } },
+    },
 },
 ```
 
@@ -71,33 +100,45 @@ specify browser along with arguments:
 
 `app = { 'chromium', '--new-window' }`
 
-[Chromium based browser](https://en.wikipedia.org/wiki/Chromium_(web_browser)#Browsers_based_on_Chromium) is recommended.
+[Chromium based browser](<https://en.wikipedia.org/wiki/Chromium_(web_browser)#Browsers_based_on_Chromium>) is recommended.
 
 ### :bulb: Usage
 
-| method ||
-|-|-|
-| open    | Open preview window                                 |
-| close   | Close preview window                                |
-| is_open | Returns `true` if preview window is currently open  |
+| method  |                                                    |
+| ------- | -------------------------------------------------- |
+| open    | Open preview window                                |
+| close   | Close preview window                               |
+| is_open | Returns `true` if preview window is currently open |
 
 Example command setup:
 
 ```lua
-vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
-vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
+keys = {
+    {
+        "<leader>cp",
+        function()
+            local peek = require("peek")
+            if peek.is_open() then
+                peek.close()
+            else
+                peek.open()
+            end
+        end,
+        desc = "Peek (Markdown Preview)",
+    },
+},
 ```
 
 The following keybinds are active when preview window is focused:
 
-| key ||
-|-|-|
-| k | scroll up               |
-| j | scroll down             |
-| u | scroll up half a page   |
-| d | scroll down half a page |
-| g | scroll to top           |
-| G | scroll to bottom        |
+| key |                         |
+| --- | ----------------------- |
+| k   | scroll up               |
+| j   | scroll down             |
+| u   | scroll up half a page   |
+| d   | scroll down half a page |
+| g   | scroll to top           |
+| G   | scroll to bottom        |
 
 ### :mag: Preview window
 
